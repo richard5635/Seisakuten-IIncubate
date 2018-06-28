@@ -46,6 +46,7 @@ public class FloatAround : MonoBehaviour
             for (int j = 0; j < egg.childCount; j++)
             {
                 shard = egg.GetChild(j);
+				if(shard == null)continue;
                 rg = shard.GetComponent<Rigidbody>();
 				forward = shard.transform.forward;
                 dir = new Vector3( 

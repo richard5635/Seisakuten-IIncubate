@@ -2999,6 +2999,7 @@ GameObject:
   - component: {fileID: 761622089}
   - component: {fileID: 761622088}
   - component: {fileID: 761622087}
+  - component: {fileID: 761622096}
   m_Layer: 0
   m_Name: clean
   m_TagString: Untagged
@@ -3206,6 +3207,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 761622085}
   m_Mesh: {fileID: 4300000, guid: 58653727436ce5f44b3eb7f61295fbd6, type: 3}
+--- !u!114 &761622096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 761622085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de0d474923b014737a77658722969aae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EggMaterial: {fileID: 0}
 --- !u!1 &776704940
 GameObject:
   m_ObjectHideFlags: 0
@@ -3750,16 +3763,6 @@ Prefab:
     - target: {fileID: 4685280690093516, guid: 348612ce6a2ca490cb8fc780ad5ba596, type: 2}
       propertyPath: m_RootOrder
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 212439018190257420, guid: 348612ce6a2ca490cb8fc780ad5ba596,
-        type: 2}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 212439018190257420, guid: 348612ce6a2ca490cb8fc780ad5ba596,
-        type: 2}
-      propertyPath: m_WasSpriteAssigned
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 348612ce6a2ca490cb8fc780ad5ba596, type: 2}
@@ -4415,7 +4418,7 @@ Light:
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 5
-  m_Range: 3.3
+  m_Range: 5.17
   m_SpotAngle: 102.4
   m_CookieSize: 10
   m_Shadows:
@@ -4633,7 +4636,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1326072563}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 13.99, z: -0.5076}
+  m_LocalPosition: {x: 0, y: 13.41, z: -0.5076}
   m_LocalScale: {x: 0.010000001, y: 0.010000005, z: 2}
   m_Children: []
   m_Father: {fileID: 954953573}

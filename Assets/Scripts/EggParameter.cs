@@ -57,6 +57,7 @@ public class EggParameter : MonoBehaviour
 
     void CheckParameter()
     {
+        
         //Case 1 : Just show three different patterns
         if (TotalParameter > PhaseA && TotalParameter <= PhaseB)
         {

@@ -31,6 +31,8 @@ public class Orbit01 : MonoBehaviour
         // Vector3 direction = diff.normalized;
         // float gravitationalForce = (attracter.GetComponent<Rigidbody>().mass * GetComponent<Rigidbody>().mass * gravityConstant) / diff.sqrMagnitude;
         // GetComponent<Rigidbody>().AddForce(direction * gravitationalForce);
-		transform.RotateAround(attracter.transform.position, Vector3.up, 20*Time.deltaTime);
+		//transform.RotateAround(attracter.transform.position, Vector3.up, 20*Time.deltaTime);
+
+		
     }
 }
