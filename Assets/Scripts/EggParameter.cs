@@ -7,6 +7,7 @@ public class EggParameter : MonoBehaviour
 	[HideInInspector]public bool isNew = true;
     GameController gameController;
 	EggMovement eggMovement;
+    ShaderHandler shaderHandler;
 	public int SoundParameter;
     public int KnockParameter;
     public int StareParameter;
@@ -24,6 +25,7 @@ public class EggParameter : MonoBehaviour
 	{
 		gameController = GameObject.Find("IIncubate").GetComponent<GameController>();
 		eggMovement = GetComponent<EggMovement>();
+        shaderHandler = GetComponent<ShaderHandler>();
 	}
 
     public void Initialize()
@@ -79,6 +81,9 @@ public class EggParameter : MonoBehaviour
         {
             //StartCoroutine("ReadytoHatch");
         }
+
+        //Change MaterialParameter
+        shaderHandler.changeColor(SoundParameter * 0.01f, KnockParameter * 0.01f, StareParameter * 0.01f, 1);
 
         //Case 2 : Create different reactions based on which parameter is higher. For now just do Case 1.
     }

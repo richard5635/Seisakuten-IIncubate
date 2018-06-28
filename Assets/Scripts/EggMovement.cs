@@ -39,6 +39,7 @@ public class EggMovement : MonoBehaviour
     EggParameter eggParameter;
     EggPhysicalAI eggPhysicalAI;
     EggMovement eggMovement;
+    ShaderHandler shaderHandler;
 
     float rotX;
     float rotY;
@@ -65,6 +66,7 @@ public class EggMovement : MonoBehaviour
         exHandler = GameObject.Find("IIncubate").transform.Find("EggExpression").gameObject.GetComponent<expressionHandler>();
         faceHandler = GetComponent<FaceExpressionHandler>();
         gameController = transform.parent.parent.gameObject.GetComponent<GameController>();
+        shaderHandler = GetComponent<ShaderHandler>();
 
         tf = transform.parent;
         rg = transform.parent.gameObject.GetComponent<Rigidbody>();
@@ -136,14 +138,14 @@ public class EggMovement : MonoBehaviour
             if(volume >= noticeThreshold && volume < noisyThreshold)
             {
                 Debug.Log("Changed Sd Parameter by +1");
-                eggParameter.AddParameter(1,0,0);
+                eggParameter.AddParameter(3,0,0);
                 eggMovement.UpdateParameterText();
                 
             }
             else if(volume >= noisyThreshold)
             {
                 Debug.Log("Changed Sd Parameter by -1");
-                eggParameter.AddParameter(-1,0,0);
+                eggParameter.AddParameter(-3,0,0);
                 eggMovement.UpdateParameterText();
                 eggPhysicalAI.SoundReaction(0);
             }
@@ -285,6 +287,14 @@ public class EggMovement : MonoBehaviour
         }
         yield return new WaitForSeconds(2);
         eggShattered = Instantiate(EggShattered, transform.position, transform.rotation, transform.parent);
+        for(int i = 0; i < eggShattered.transform.childCount; i++)
+        {
+            if(eggShattered.transform.GetChild(i).GetComponent<MeshRenderer>() == null)continue;
+            Material eggShard = eggShattered.transform.GetChild(i).GetComponent<MeshRenderer>().material;
+            shaderHandler.changeShatteredEggColor(eggShard, eggParameter.SoundParameter * 0.3f, eggParameter.KnockParameter * 0.3f, eggParameter.StareParameter * 0.3f, 1); 
+        }
+        
+
         HideCleanEgg();
         
         
