@@ -18,6 +18,8 @@ public class GameController : MonoBehaviour
 	Rigidbody rg;
     void Awake()
     {
+        Application.targetFrameRate = 60;
+
         eggParameter = GameObject.Find("Egg").transform.Find("clean").gameObject.GetComponent<EggParameter>();
         eggMovement = GameObject.Find("Egg").transform.Find("clean").gameObject.GetComponent<EggMovement>();
 		eggPhysicalAI = GameObject.Find("Egg").transform.Find("clean").gameObject.GetComponent<EggPhysicalAI>();
@@ -90,8 +92,8 @@ public class GameController : MonoBehaviour
 		yield return new WaitForSeconds(1);
 		Debug.Log("Dropping New Egg!");
 		Egg.transform.position = new Vector3(0, 0, 0.5f);
+        eggParameter.Initialize();
 		eggMovement.ShowCleanEgg();
-		eggParameter.Initialize();
 		rg.isKinematic = false;
         eggParameter.isNew = true;
         StartCoroutine(CountDown());

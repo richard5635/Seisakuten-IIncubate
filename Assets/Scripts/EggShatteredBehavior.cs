@@ -6,6 +6,11 @@ public class EggShatteredBehavior : MonoBehaviour {
 
 	// Use this for initialization
 	Vector3 explosionCenter;
+
+	void Awake()
+	{
+		Application.targetFrameRate = 60;
+	}
 	void Start () {
 		StartCoroutine(Hatch());
 	}
@@ -33,4 +38,11 @@ public class EggShatteredBehavior : MonoBehaviour {
 		//Destroy(gameObject);
 		yield return null;
 	}
+
+	void Disappear(GameObject obj)
+	{
+		
+	}
+
+
 }

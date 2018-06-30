@@ -84,10 +84,33 @@ public class EggMovement : MonoBehaviour
     {
         initialPosition = transform.localPosition;
         Listen();
+        StartCoroutine(StareHandling());
 
         // m_Recognizer = new KeywordRecognizer(keywords);
         // m_Recognizer.OnPhraseRecognized += OnPhraseRecognized;
         // m_Recognizer.Start();
+    }
+
+    IEnumerator StareHandling()
+    {
+        int randomInt = UnityEngine.Random.Range(1,2);
+        while(true)
+        {
+            switch(randomInt)
+            {
+                case 1:
+                    eggParameter.AddParameter(0, 0, 2);
+                    eggMovement.UpdateParameterText();
+                    break;
+                case 2:
+                    eggParameter.AddParameter(0, 0, -1);
+                    eggMovement.UpdateParameterText();
+                    break;
+                default:
+                    break;
+            }
+            yield return new WaitForSeconds(1.0f);
+        }
     }
 
     // void OnPhraseRecognized(PhraseRecognizedEventArgs args)
@@ -130,27 +153,27 @@ public class EggMovement : MonoBehaviour
     IEnumerator GetLoudness()
     {
         float volume = MicInput.MicLoudness;
-        Debug.Log("Listening Start " + volume);
+        //Debug.Log("Listening Start " + volume);
         while(isListening)
         {
             volume = ToDB(MicInput.MicLoudness);
-            Debug.Log("Listening... " + volume);
+            //Debug.Log("Listening... " + volume);
             if(volume >= noticeThreshold && volume < noisyThreshold)
             {
-                Debug.Log("Changed Sd Parameter by +1");
+                //Debug.Log("Changed Sd Parameter by +1");
                 eggParameter.AddParameter(3,0,0);
                 eggMovement.UpdateParameterText();
                 
             }
             else if(volume >= noisyThreshold)
             {
-                Debug.Log("Changed Sd Parameter by -1");
+                //Debug.Log("Changed Sd Parameter by -1");
                 eggParameter.AddParameter(-3,0,0);
                 eggMovement.UpdateParameterText();
                 eggPhysicalAI.SoundReaction(0);
             }
             else{
-                Debug.Log("No Sd change.");
+                //Debug.Log("No Sd change.");
             }
             
             yield return new WaitForSeconds(0.5f);
@@ -291,7 +314,7 @@ public class EggMovement : MonoBehaviour
         {
             if(eggShattered.transform.GetChild(i).GetComponent<MeshRenderer>() == null)continue;
             Material eggShard = eggShattered.transform.GetChild(i).GetComponent<MeshRenderer>().material;
-            shaderHandler.changeShatteredEggColor(eggShard, eggParameter.SoundParameter * 0.3f, eggParameter.KnockParameter * 0.3f, eggParameter.StareParameter * 0.3f, 1); 
+            shaderHandler.changeShatteredEggColor(eggShard, eggParameter.SoundParameter * 0.01f, eggParameter.KnockParameter * 0.01f, eggParameter.StareParameter * 0.01f, 1); 
         }
         
 

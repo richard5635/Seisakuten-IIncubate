@@ -127,6 +127,7 @@
      <Compile Include="Assets\Scripts\RaycastExample.cs" />
      <Compile Include="Assets\SelfDestroy.cs" />
      <Compile Include="Assets\ShaderHandler.cs" />
+     <Compile Include="Assets\ShardHandler.cs" />
      <None Include="Assets\PostProcessing\Resources\Shaders\DepthOfField.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\MotionBlur.cginc" />
      <None Include="Assets\PostProcessing\Resources\Shaders\Fog.shader" />

@@ -4134,6 +4134,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EggShattered: {fileID: 1755316004615416, guid: 8b9254da66c90da4f9eb03db5d299fb2,
     type: 2}
+  isListening: 1
+  noisyThreshold: 20
+  noticeThreshold: 5
   TextStarePar: {fileID: 114252155058309060}
   TextSoundPar: {fileID: 114677805214562002}
   TextKnockPar: {fileID: 114805291471615432}
@@ -4571,7 +4574,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.3944, y: 0.40519997}
+  m_Size: {x: 985999.94, y: 1012999.94}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -4616,7 +4619,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.1524, y: 0.22760001}
+  m_Size: {x: 380999.97, y: 569000}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -4706,7 +4709,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.1804, y: 0.1804}
+  m_Size: {x: 450999.97, y: 450999.97}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -4751,7 +4754,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 7.58, y: 7.44}
+  m_Size: {x: 757999.94, y: 743999.94}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -4796,7 +4799,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 8.02, y: 2.92}
+  m_Size: {x: 801999.94, y: 292000}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -4841,7 +4844,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 8.02, y: 2.92}
+  m_Size: {x: 801999.94, y: 292000}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -4886,7 +4889,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.1804, y: 0.1804}
+  m_Size: {x: 450999.97, y: 450999.97}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

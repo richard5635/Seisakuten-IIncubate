@@ -40,10 +40,10 @@ public class ShaderHandler : MonoBehaviour {
 	{
 		float time = 0.5f;
 		float elapsedTime = 0f;
-		Debug.Log("Changing color.. " + elapsedTime);
+		//Debug.Log("Changing color.. " + elapsedTime);
 		while(elapsedTime < time)
 		{
-			Debug.Log("Changing color.. " + elapsedTime);
+			//Debug.Log("Changing color.. " + elapsedTime);
 			EggMaterial.color = Color.Lerp(EggMaterial.color, new Color(r,g,b,a), elapsedTime/time);
 			elapsedTime += Time.deltaTime;
 			yield return null;
