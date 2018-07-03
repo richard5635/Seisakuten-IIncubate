@@ -46,13 +46,6 @@ public class EggPhysicalAI : MonoBehaviour
         PIDz = new PID(0.4f, 0, 2f);
     }
 
-    void OnEnable()
-    {
-        DecideBehavior();
-    }
-
-    
-
     void Start()
     {
         DecideBehavior();
@@ -100,8 +93,11 @@ public class EggPhysicalAI : MonoBehaviour
 
     void DecideBehavior()
     {
-        if (isBusy) StartCoroutine(Idle());
-        switch (Random.Range(0, 4))
+        if (isBusy) {
+            StartCoroutine(Idle());
+            return;
+        }
+        switch (Random.Range(0, 3))
         {
             case 0:
                 StartCoroutine(Shake());
@@ -158,7 +154,6 @@ public class EggPhysicalAI : MonoBehaviour
     {
         yield return new WaitForSeconds(1.0f);
         DecideBehavior();
-        yield return null;
     }
 
     IEnumerator Shake()
@@ -197,14 +192,20 @@ public class EggPhysicalAI : MonoBehaviour
         yield return new WaitForSeconds(Random.Range(1.5f, 3.0f));
         Debug.Log("Shake Finishes.");
         //StopCoroutine(Shake());
+        yield return new WaitForSeconds(1.0f);
         DecideBehavior();
-        yield return null;
     }
 
     IEnumerator Roll()
     {
-        exHandler.Expression(exHandler.question, 1.5f);
-        float torque = 4f;
+        // if( eggParameter.TotalParameter < eggParameter.PhaseB) exHandler.Expression(exHandler.question, 1.5f) ;
+        // else if (eggParameter.TotalParameter >= eggParameter.PhaseB && eggParameter.TotalParameter < eggParameter.PhaseC) exHandler.Expression(exHandler.cheerful, 1.5f);
+        // else exHandler.Expression(exHandler.annoyed, 1.5f) ;
+
+        float torque = 10f;
+        
+        if(eggParameter.TotalParameter >= eggParameter.PhaseB) torque = 20f;
+
         isBalancing = false;
         Debug.Log("Roll Start");
         rg.AddTorque(torque, 0, 0);
@@ -215,19 +216,19 @@ public class EggPhysicalAI : MonoBehaviour
             yield return new WaitForSeconds(3.0f);
         }
         isBalancing = true;
+        Debug.Log("Roll Finish");
+        yield return new WaitForSeconds(1.0f);
         DecideBehavior();
-        yield return null;
     }
 
     IEnumerator Jump()
     {
-        exHandler.Expression(exHandler.sweat, 1.5f);
+        // if(eggParameter.TotalParameter < eggParameter.PhaseD) exHandler.Expression(exHandler.sweat, 1.5f);
+        // else exHandler.Expression(exHandler.annoyed, 1.5f) ;
+
         float forceJ = 40f;
         Debug.Log("Jump Start");
-        // if (Standing())
-        // {
-        //     rg.AddForce(new Vector3(0, 20.0f, 0));
-        // }
+
         float elapsedTime = 0;
         float time = 0.5f;
         while (elapsedTime < time)
@@ -235,8 +236,9 @@ public class EggPhysicalAI : MonoBehaviour
             rg.AddRelativeForce(new Vector3(0, forceJ, 0));
             elapsedTime += Time.deltaTime;
         }
+        Debug.Log("Jump Finish");
+        yield return new WaitForSeconds(1.0f);
         DecideBehavior();
-        yield return null;
     }
 
     IEnumerator LookAround()
@@ -256,7 +258,6 @@ public class EggPhysicalAI : MonoBehaviour
         isBalancing = true;
         yield return null;
     }
-
     void nullifyForce()
     {
         rg.velocity = Vector3.zero;
@@ -270,7 +271,6 @@ public class EggPhysicalAI : MonoBehaviour
         isBusy = true;
         yield return new WaitForSeconds(time);
         isBusy = false;
-        DecideBehavior();
     }
     IEnumerator LookTowards(Vector3 target, float time)
     {
@@ -363,7 +363,7 @@ public class EggPhysicalAI : MonoBehaviour
             rg.AddRelativeForce(new Vector3(Random.Range(-0.2f, 0.2f), 0.1f * forceJ, forceJ));
             elapsedTime += Time.deltaTime;
         }
-        DecideBehavior();
+        //DecideBehavior();
 
         yield return new WaitForSeconds(1);
         isBalancing = true;

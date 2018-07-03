@@ -7,10 +7,9 @@ public class HatchlingHandler : MonoBehaviour {
 	public GameObject Particle01;
 	public GameObject Particle02;
 	public DialogueHandler dialogueHandler;
-	public Shader Shader01;
-	public Shader Shader02;
-	public float MinAge = 2f;
-	public float MaxAge = 4f;
+	ShaderHandler shaderHandler;
+	public float MinAge = 20f;
+	public float MaxAge = 40f;
 	public float minX = -0.8f;
 	public float maxX = 0.8f;
 	public float minY = -0.55f;
@@ -27,6 +26,7 @@ public class HatchlingHandler : MonoBehaviour {
 
 	void Awake()
 	{
+		shaderHandler = GameObject.Find("Egg").transform.Find("clean").GetComponent<ShaderHandler>();
 		dialogueHandler = GameObject.Find("DialogueText").GetComponent<DialogueHandler>();
 	}
 	void Start () {
@@ -35,6 +35,12 @@ public class HatchlingHandler : MonoBehaviour {
 		StartCoroutine(RandomizeTarget());
 		transform.parent = GameObject.Find("IIncubate").transform;
 		PID = new PID(0.01f, 0, 2f);
+
+		//This makes it slow somehow
+		shaderHandler.changeShatteredEggColor(transform.Find("Sphere").GetComponent<MeshRenderer>().material,
+			eggParameter.ParameterColor(eggParameter.TotalParameter)[0], 
+            eggParameter.ParameterColor(eggParameter.TotalParameter)[1], 
+            eggParameter.ParameterColor(eggParameter.TotalParameter)[2],1); 
 
 		if(eggParameter.TotalParameter >= eggParameter.PhaseA)
 		{

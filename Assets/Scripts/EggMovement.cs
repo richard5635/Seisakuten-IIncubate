@@ -313,7 +313,7 @@ public class EggMovement : MonoBehaviour
         {
             rigidb.AddForce(v.x, v.y, v.z);
             elapsedTime += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
     }
 
@@ -322,6 +322,7 @@ public class EggMovement : MonoBehaviour
         //Microphone
         dialogueHandler.Narrate("Hatch", 2);
         isListening = false;
+        eggPhysicalAI.isBusy = true;
 
         Vector3 initPos = tf.position;
         rg.isKinematic = true;
@@ -334,8 +335,9 @@ public class EggMovement : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         eggShattered = Instantiate(EggShattered, transform.position, transform.rotation, transform.parent);
+        eggParameter.Initialize();
         for(int i = 0; i < eggShattered.transform.childCount; i++)
         {
             if(eggShattered.transform.GetChild(i).GetComponent<MeshRenderer>() == null)continue;

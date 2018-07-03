@@ -18,7 +18,7 @@ public class EggShatteredBehavior : MonoBehaviour {
 	{
 		explosionCenter = new Vector3(
 			transform.position.x,
-			transform.position.y+0.8f,
+			transform.position.y + 0.8f,
 			transform.position.z
 		);
 		float duration = 0.5f;
@@ -29,7 +29,7 @@ public class EggShatteredBehavior : MonoBehaviour {
 			{
 				if(transform.GetChild(i).GetComponent<Rigidbody>() == null)continue;
 				//transform.GetChild(i).GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0, 0.05f, 0));
-				transform.GetChild(i).GetComponent<Rigidbody>().AddExplosionForce(6.0f,explosionCenter,2.0f, 1.0f);
+				transform.GetChild(i).GetComponent<Rigidbody>().AddExplosionForce(12.0f,explosionCenter,3.0f, 1.0f);
 				elapsedTime += Time.deltaTime;
 			}
 			yield return null;
