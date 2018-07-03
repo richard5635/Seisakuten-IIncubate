@@ -15,16 +15,21 @@ public class DialogueHandler : MonoBehaviour {
 
 	void Start()
 	{
-		Narrate(2, "intro");
+		Narrate("intro", 2);
 	}
 
 	Dictionary<string, string> Dialogue = new Dictionary<string, string>()
 	{
-		{"intro","Welcome.\nWelcome"},
-		{"d02","The content of text 03"},
-		{"leave","The ball left the cage."}
+		{"intro","Welcome to I Incubate"},
+		{"FirstKnock","おや?\nたまごさんが反応したようです。"},
+		{"Hatch","たまごがふ化しようとしている。"},
+		{"HatchlingDis","「ヒナ」がどこかへ行ってしまったようです。"},
+		{"",""}
 	};
-	void Narrate(float time, string key){
+
+	// void 
+
+	public void Narrate(string key, float time){
 		StartCoroutine(INarrate(time, key));
 	}
 

@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour
 	EggPhysicalAI eggPhysicalAI;
 	GameObject Egg;
 	Rigidbody rg;
+    public GameObject SpotLight;
     void Awake()
     {
         Application.targetFrameRate = 60;
@@ -91,7 +92,9 @@ public class GameController : MonoBehaviour
 		}
 		yield return new WaitForSeconds(1);
 		Debug.Log("Dropping New Egg!");
-		Egg.transform.position = new Vector3(0, 0, 0.5f);
+		Egg.transform.position = new Vector3(0, 0, 0.8f);
+        SpotLight.GetComponent<Animator>().SetBool("isOn", true);
+        eggMovement.ApplyForce(Egg.GetComponent<Rigidbody>(), new Vector3(0,0,-30.0f), 0.5f);
         eggParameter.Initialize();
 		eggMovement.ShowCleanEgg();
 		rg.isKinematic = false;

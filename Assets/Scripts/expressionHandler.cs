@@ -6,6 +6,8 @@ public class expressionHandler : MonoBehaviour {
     public GameObject sweat;
     public GameObject notice;
     public GameObject question;
+    public GameObject cheerful;
+    public GameObject shocked;
     private GameObject setExpression;
     private IEnumerator animate;
 

@@ -46,6 +46,11 @@ public class EggPhysicalAI : MonoBehaviour
         PIDz = new PID(0.4f, 0, 2f);
     }
 
+    void OnEnable()
+    {
+        DecideBehavior();
+    }
+
     
 
     void Start()
@@ -95,8 +100,8 @@ public class EggPhysicalAI : MonoBehaviour
 
     void DecideBehavior()
     {
-        if (isBusy) return;
-        switch (Random.Range(0, 5))
+        if (isBusy) StartCoroutine(Idle());
+        switch (Random.Range(0, 4))
         {
             case 0:
                 StartCoroutine(Shake());
@@ -108,7 +113,7 @@ public class EggPhysicalAI : MonoBehaviour
                 }
                 else
                 {
-                    DecideBehavior();
+                    StartCoroutine(Idle());
                 }
                 break;
             case 2:
@@ -118,7 +123,17 @@ public class EggPhysicalAI : MonoBehaviour
                 }
                 else
                 {
-                    DecideBehavior();
+                    StartCoroutine(Idle());
+                }
+                break;
+            case 3:
+                if(eggParameter.TotalParameter >= eggParameter.PhaseC)
+                {
+                    StartCoroutine(LookAround());
+                }
+                else
+                {
+                    StartCoroutine(Idle());
                 }
                 break;
             default:
@@ -153,15 +168,15 @@ public class EggPhysicalAI : MonoBehaviour
         float randDist = Random.Range(1.0f, 2.0f);
         if (eggParameter.TotalParameter >= eggParameter.PhaseA && eggParameter.TotalParameter < eggParameter.PhaseB)
         {
-            torque = 4;
+            torque = 10;
         }
         else if (eggParameter.TotalParameter >= eggParameter.PhaseB && eggParameter.TotalParameter < eggParameter.PhaseC)
         {
-            torque = 6;
+            torque = 20;
         }
         else if (eggParameter.TotalParameter >= eggParameter.PhaseC)
         {
-            torque = 8;
+            torque = 30;
         }
         else
         {
@@ -186,15 +201,9 @@ public class EggPhysicalAI : MonoBehaviour
         yield return null;
     }
 
-    IEnumerator Wiggle()
-    {
-        Debug.Log("Wiggle Start");
-        DecideBehavior();
-        yield return null;
-    }
-
     IEnumerator Roll()
     {
+        exHandler.Expression(exHandler.question, 1.5f);
         float torque = 4f;
         isBalancing = false;
         Debug.Log("Roll Start");
@@ -212,7 +221,8 @@ public class EggPhysicalAI : MonoBehaviour
 
     IEnumerator Jump()
     {
-        float forceJ = 4f;
+        exHandler.Expression(exHandler.sweat, 1.5f);
+        float forceJ = 40f;
         Debug.Log("Jump Start");
         // if (Standing())
         // {
@@ -226,6 +236,11 @@ public class EggPhysicalAI : MonoBehaviour
             elapsedTime += Time.deltaTime;
         }
         DecideBehavior();
+        yield return null;
+    }
+
+    IEnumerator LookAround()
+    {
         yield return null;
     }
     public void RotateTowards(Vector3 target)
@@ -278,7 +293,6 @@ public class EggPhysicalAI : MonoBehaviour
 
         //Stand Up
         //Land Position
-        float stHeight = 0.446f;
         while (elapsedTime < 0.2f)
         {
             tf.position = Vector3.Lerp(stPos, new Vector3(stPos.x, stPos.y + 0.1f, stPos.z), (elapsedTime / 1) * 10);
@@ -321,7 +335,10 @@ public class EggPhysicalAI : MonoBehaviour
             case 0:
                 if (eggParameter.TotalParameter >= eggParameter.PhaseA)
                 {
-                    if (!isBusy) StartCoroutine(ScaredAway());
+                    if (!isBusy) {
+                        StartCoroutine(ScaredAway());
+                        exHandler.Expression(exHandler.shocked, 0.6f);
+                    }
                 }
                 break;
             default:

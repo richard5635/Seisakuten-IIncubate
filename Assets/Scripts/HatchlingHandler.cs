@@ -6,8 +6,11 @@ public class HatchlingHandler : MonoBehaviour {
 	EggParameter eggParameter;
 	public GameObject Particle01;
 	public GameObject Particle02;
+	public DialogueHandler dialogueHandler;
 	public Shader Shader01;
 	public Shader Shader02;
+	public float MinAge = 2f;
+	public float MaxAge = 4f;
 	public float minX = -0.8f;
 	public float maxX = 0.8f;
 	public float minY = -0.55f;
@@ -21,16 +24,34 @@ public class HatchlingHandler : MonoBehaviour {
 	float elapsedTime = 0;
 
 	// Use this for initialization
+
+	void Awake()
+	{
+		dialogueHandler = GameObject.Find("DialogueText").GetComponent<DialogueHandler>();
+	}
 	void Start () {
+		StartCoroutine(LifeSpan());
 		eggParameter = GameObject.Find("Egg").transform.Find("clean").GetComponent<EggParameter>();
 		StartCoroutine(RandomizeTarget());
 		transform.parent = GameObject.Find("IIncubate").transform;
 		PID = new PID(0.01f, 0, 2f);
 
-		// if(eggParameter.TotalParameter >= eggParameter.PhaseA && eggParameter.TotalParameter < eggParameter.PhaseB)
-		// {
+		if(eggParameter.TotalParameter >= eggParameter.PhaseA)
+		{
+			//Particle01
+			transform.Find("Particle01").gameObject.SetActive(true);
+			if(eggParameter.TotalParameter >= eggParameter.PhaseB)
+			{
+				//Particle02
+				transform.Find("Particle02").gameObject.SetActive(true);
+				if(eggParameter.TotalParameter >= eggParameter.PhaseC)
+				{
+					//Particle03
+					transform.Find("Particle03").gameObject.SetActive(true);
+				}
+			}
 
-		// }
+		}
 	}
 	
 	// Update is called once per frame
@@ -51,6 +72,23 @@ public class HatchlingHandler : MonoBehaviour {
 			), (elapsedTime*Random.Range(0.5f,1)) / (interval*Random.Range(1,2))
 		);
 		elapsedTime += Time.deltaTime;
+	}
+
+	IEnumerator LifeSpan()
+	{
+		float time = 0;
+		float age = Random.Range(MinAge, MaxAge);
+		Debug.Log("HAtchling Bornn");
+		// while(time < age)
+		// {
+		// 	time += Time.deltaTime;
+		// 	yield return null;
+		// }
+		yield return new WaitForSeconds(age);
+		transform.Find("Pop").gameObject.SetActive(true);
+		yield return new WaitForSeconds(0.5f);
+		dialogueHandler.Narrate("HatchlingDis",2);
+		Destroy(gameObject);
 	}
 
 	IEnumerator RandomizeTarget()

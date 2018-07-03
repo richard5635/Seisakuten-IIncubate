@@ -83,9 +83,45 @@ public class EggParameter : MonoBehaviour
         }
 
         //Change MaterialParameter
-        shaderHandler.changeColor(SoundParameter * 0.01f, KnockParameter * 0.01f, StareParameter * 0.01f, 1);
+        //shaderHandler.changeColor(SoundParameter * 0.01f, KnockParameter * 0.01f, StareParameter * 0.01f, 1);
+        shaderHandler.changeColor(
+            ParameterColor(TotalParameter)[0],
+            ParameterColor(TotalParameter)[1],
+            ParameterColor(TotalParameter)[2],
+             1);
 
         //Case 2 : Create different reactions based on which parameter is higher. For now just do Case 1.
+    }
+
+    public float[] ParameterColor(int TotalParameter)
+    {
+        float[] colors = new float[3];
+
+        int pColor = TotalParameter % 90;
+        //
+        float addR = 0;
+        if(pColor < 15 || pColor >=75) addR = 0.2f;
+        else if(pColor >= 15 && pColor < 30) addR = 0.2f - (0.2f * (pColor - 15)/15);
+        else if(pColor >= 60 && pColor < 75) addR = (0.2f * (pColor - 60)/15);
+        else addR = 0;
+
+        float addG = 0;
+        if(pColor >= 45 && pColor < 75) addG = 0.2f;
+        else if(pColor >= 75 && pColor < 90) addG = 0.2f - (0.2f * (pColor - 75)/15);
+        else if(pColor >= 30 && pColor < 45) addG = (0.2f * (pColor - 30)/15);
+        else addG = 0;
+
+        float addB = 0;
+        if(pColor >=15 && pColor < 45) addB = 0.2f;
+        else if(pColor >= 45 && pColor < 60) addB = 0.2f - (0.2f * (pColor - 45)/15);
+        else if(pColor >= 0 && pColor < 15) addB = (0.2f * (pColor)/15);
+        else addB = 0;
+
+        colors[0] = 0.55f + addR;
+        colors[1] = 0.55f + addG;
+        colors[2] = 0.55f + addB;
+
+        return colors;
     }
 
     public void DetermineHatch()

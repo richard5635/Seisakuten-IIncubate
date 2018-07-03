@@ -40,6 +40,7 @@ public class EggMovement : MonoBehaviour
     EggPhysicalAI eggPhysicalAI;
     EggMovement eggMovement;
     ShaderHandler shaderHandler;
+    public DialogueHandler dialogueHandler;
 
     float rotX;
     float rotY;
@@ -54,10 +55,17 @@ public class EggMovement : MonoBehaviour
     public void ProcessInput()
     {
         //call a variable based on string name?
-        if (touchCount == 1) exHandler.Expression(exHandler.notice, 1.0f);
-        if (eggParameter.TotalParameter >= eggParameter.PhaseA)
+        if (touchCount == 1) 
         {
-            if (!eggPhysicalAI.isBusy) eggPhysicalAI.RotateTowards(touchPosition);
+            dialogueHandler.Narrate("FirstKnock",2);
+            exHandler.Expression(exHandler.notice, 1.0f);
+        }
+        if (eggParameter.TotalParameter >= eggParameter.PhaseB)
+        {
+            if (!eggPhysicalAI.isBusy) {
+                eggPhysicalAI.RotateTowards(touchPosition);
+                exHandler.Expression(exHandler.notice, 1.0f);
+            }
         }
     }
 
@@ -293,15 +301,33 @@ public class EggMovement : MonoBehaviour
         gameObject.GetComponents<SphereCollider>()[1].enabled = true;
     }
 
+    public void ApplyForce(Rigidbody rigidb, Vector3 v, float duration)
+    {
+        StartCoroutine(IApplyForce(rigidb, v, duration));
+    }
+
+    IEnumerator IApplyForce(Rigidbody rigidb, Vector3 v, float duration)
+    {
+        float elapsedTime = 0;
+        while(elapsedTime < duration)
+        {
+            rigidb.AddForce(v.x, v.y, v.z);
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
     IEnumerator Hatch(bool good)
     {
         //Microphone
+        dialogueHandler.Narrate("Hatch", 2);
         isListening = false;
 
         Vector3 initPos = tf.position;
         rg.isKinematic = true;
         float duration = 2.0f;
         float elapsedTime = 0;
+        gameController.SpotLight.GetComponent<Animator>().SetBool("isOn", false);
         while(elapsedTime < duration)
         {
             tf.position = Vector3.Lerp(initPos, new Vector3(0, 0, 0.5f), elapsedTime/duration);
@@ -314,7 +340,10 @@ public class EggMovement : MonoBehaviour
         {
             if(eggShattered.transform.GetChild(i).GetComponent<MeshRenderer>() == null)continue;
             Material eggShard = eggShattered.transform.GetChild(i).GetComponent<MeshRenderer>().material;
-            shaderHandler.changeShatteredEggColor(eggShard, eggParameter.SoundParameter * 0.01f, eggParameter.KnockParameter * 0.01f, eggParameter.StareParameter * 0.01f, 1); 
+            shaderHandler.changeShatteredEggColor(eggShard, 
+                eggParameter.ParameterColor(eggParameter.TotalParameter)[0], 
+                eggParameter.ParameterColor(eggParameter.TotalParameter)[1], 
+                eggParameter.ParameterColor(eggParameter.TotalParameter)[2],1); 
         }
         
 
@@ -329,7 +358,7 @@ public class EggMovement : MonoBehaviour
         {
 
         }
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(0.5f);
         eggShattered.transform.parent = GameObject.Find("Shells").transform;
         gameController.ReproduceEgg();
         yield return null;
