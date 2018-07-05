@@ -5,6 +5,7 @@ using UnityEngine;
 public class FaceExpressionHandler : MonoBehaviour {
 
 	public GameObject blush;
+    public GameObject angry;
     private GameObject setExpression;
     private IEnumerator animate;
 

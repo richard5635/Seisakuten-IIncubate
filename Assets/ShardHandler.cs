@@ -6,7 +6,7 @@ public class ShardHandler : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Destroy(gameObject, Random.Range(150.0f, 190.0f));
+		Destroy(gameObject, Random.Range(27.0f, 30.0f));
 		StartCoroutine(SuddenGravity());
 	}
 
@@ -30,12 +30,4 @@ public class ShardHandler : MonoBehaviour {
 		yield return new WaitForSeconds(Random.Range(21.0f,23.0f));
 		GetComponent<Rigidbody>().useGravity = true;
 	}
-
-	// void OnCollisionEnter(Collision col)
-	// {
-	// 	if(col.gameObject.tag=="Wall")
-	// 	{
-	// 		Destroy(gameObject);
-	// 	}
-	// }
 }

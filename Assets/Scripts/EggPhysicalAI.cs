@@ -350,7 +350,7 @@ public class EggPhysicalAI : MonoBehaviour
             target.z - tf.position.z
         );
         float elapsedTime = 0;
-        Debug.Log("The Egg notices you!");
+        //Debug.Log("The Egg notices you!");
         rg.useGravity = false;
         isBalancing = false;
         Vector3 stPos = tf.position;
@@ -448,22 +448,25 @@ public class EggPhysicalAI : MonoBehaviour
 
     public IEnumerator IHeatUp()
     {
-        while (true)
+        while (heatLevel < 50)
         {
             Debug.Log("Red = " + heatRed);
             heatRed += 0.15f;
+            heatLevel++;
             shaderHandler.changeColor(heatRed, mat.color.g, mat.color.b, mat.color.a);
             eggParameter.AddParameter(0, 1, 0);
             if(heatRed > 1 && heatRed < 1.5f)exHandler.Expression(exHandler.hot, 1.0f);
             yield return new WaitForSeconds(0.45f);
 
-            // int timer = 0;
-            // if(timer % 3 == 2)
-            // {
-
-            // }
-            // timer ++;
         }
+        float elapsedTime = 0;
+        while (elapsedTime < 2)
+        {
+            rg.AddForce(new Vector3( 0, 10, 0));
+            elapsedTime += Time.deltaTime:
+            yield return new WaitForEndOfFrame();
+        }
+        
     }
 
     public IEnumerator ICoolDown()
