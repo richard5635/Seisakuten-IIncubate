@@ -5180,6 +5180,7 @@ MonoBehaviour:
   PhaseB: 75
   PhaseC: 135
   PhaseD: 200
+  inhColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &1322110294
 MonoBehaviour:
   m_ObjectHideFlags: 0

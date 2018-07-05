@@ -13,8 +13,8 @@ public class EggMovement : MonoBehaviour
     //Microphone Related
     [Header("Microphone Related")]
     [HideInInspector]public bool isListening = true;
-    public float noisyThreshold = 20.0f;
-    public float noticeThreshold = 15.0f;
+    public float noisyThreshold = 19.0f;
+    public float noticeThreshold = 14.0f;
 
     private Vector3 initialPosition;
     private Vector3 initialRotation;
@@ -340,16 +340,22 @@ public class EggMovement : MonoBehaviour
         yield return new WaitForSeconds(1);
         eggShattered = Instantiate(EggShattered, transform.position, transform.rotation, transform.parent);
         eggParameter.TotalParPass = eggParameter.TotalParameter;
-        eggParameter.Initialize();
+        
         for(int i = 0; i < eggShattered.transform.childCount; i++)
         {
             if(eggShattered.transform.GetChild(i).GetComponent<MeshRenderer>() == null)continue;
             Material eggShard = eggShattered.transform.GetChild(i).GetComponent<MeshRenderer>().material;
             shaderHandler.changeShatteredEggColor(eggShard, 
-                eggParameter.ParameterColor(eggParameter.TotalParameter)[0], 
-                eggParameter.ParameterColor(eggParameter.TotalParameter)[1], 
-                eggParameter.ParameterColor(eggParameter.TotalParameter)[2],1); 
+                eggParameter.ParSpecColor(eggParameter.SoundParameter), 
+                eggParameter.ParSpecColor(eggParameter.KnockParameter), 
+                eggParameter.ParSpecColor(eggParameter.StareParameter),1); 
         }
+        eggParameter.inhColor = new Color(
+            eggParameter.ParSpecColor(eggParameter.SoundParameter), 
+                eggParameter.ParSpecColor(eggParameter.KnockParameter), 
+                eggParameter.ParSpecColor(eggParameter.StareParameter),1
+        );
+        eggParameter.Initialize();
 
         HideCleanEgg();
         

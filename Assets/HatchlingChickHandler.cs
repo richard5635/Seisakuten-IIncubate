@@ -100,24 +100,24 @@ public class HatchlingChickHandler : MonoBehaviour
 
 
         shaderHandler.changeShatteredEggColor(cHead.GetComponent<MeshRenderer>().material,
-            eggParameter.ParameterColor(eggParameter.TotalParPass)[0],
-            eggParameter.ParameterColor(eggParameter.TotalParPass)[1],
-            eggParameter.ParameterColor(eggParameter.TotalParPass)[2], 1);
+            eggParameter.inhColor.r,
+            eggParameter.inhColor.g,
+            eggParameter.inhColor.b, 1);
 
         shaderHandler.changeShatteredEggColor(cBody.GetComponent<MeshRenderer>().material,
-            eggParameter.ParameterColor(eggParameter.TotalParPass)[0],
-            eggParameter.ParameterColor(eggParameter.TotalParPass)[1],
-            eggParameter.ParameterColor(eggParameter.TotalParPass)[2], 1);
+            eggParameter.inhColor.r,
+            eggParameter.inhColor.g,
+            eggParameter.inhColor.b, 1);
 
         shaderHandler.changeShatteredEggColor(cWings.transform.GetChild(0).GetComponent<MeshRenderer>().material,
-            eggParameter.ParameterColor(eggParameter.TotalParPass)[0],
-            eggParameter.ParameterColor(eggParameter.TotalParPass)[1],
-            eggParameter.ParameterColor(eggParameter.TotalParPass)[2], 1);
+            eggParameter.inhColor.r,
+            eggParameter.inhColor.g,
+            eggParameter.inhColor.b, 1);
 
         shaderHandler.changeShatteredEggColor(cWings.transform.GetChild(1).GetComponent<MeshRenderer>().material,
-        eggParameter.ParameterColor(eggParameter.TotalParPass)[0],
-        eggParameter.ParameterColor(eggParameter.TotalParPass)[1],
-        eggParameter.ParameterColor(eggParameter.TotalParPass)[2], 1);
+            eggParameter.inhColor.r,
+            eggParameter.inhColor.g,
+            eggParameter.inhColor.b, 1);
     }
 
     void Update()

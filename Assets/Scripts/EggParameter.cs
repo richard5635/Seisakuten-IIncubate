@@ -18,10 +18,12 @@ public class EggParameter : MonoBehaviour
     public int hatchgoodlimit = 25;
     public int hatchbadlimit = 75;
 
-    public int PhaseA = 75;
-    public int PhaseB = 135;
-    public int PhaseC = 180;
+    public int PhaseA = 60;
+    public int PhaseB = 110;
+    public int PhaseC = 160;
 	public int PhaseD = 200;
+
+    [HideInInspector]public Color inhColor;
 
     //IEnumerator
     [HideInInspector]public IEnumerator ChangeColorVar;
