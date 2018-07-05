@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour
     public GameObject SpotLight;
     void Awake()
     {
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 50;
 
         eggParameter = GameObject.Find("Egg").transform.Find("clean").gameObject.GetComponent<EggParameter>();
         eggMovement = GameObject.Find("Egg").transform.Find("clean").gameObject.GetComponent<EggMovement>();
@@ -82,7 +82,7 @@ public class GameController : MonoBehaviour
 	{
 		//Cause of Error? Not yet known, but when called outside it doesnt work, so do smth with processing inside.
 		Debug.Log("Reproducing Egg");
-		float duration = 2.0f;
+		// float duration = 2.0f;
 		float elapsedTime = 0;
 		// while(elapsedTime < duration)
 		// {
@@ -97,7 +97,6 @@ public class GameController : MonoBehaviour
 		tf.position = new Vector3(0, 0.2f, 1.2f);
         SpotLight.GetComponent<Animator>().SetBool("isOn", true);
 
-        Debug.Log("Force");
         elapsedTime = 0;
         eggMovement.ShowCleanEgg();
         rg.isKinematic = false;

@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/GraphicTest.unity
     guid: 53474fb8d65cc45e6b73e068b9dad4e5
+  - enabled: 0
+    path: Assets/Scenes/iOSTouch.unity
+    guid: 4813b5a497549492ab896e9bc988ef10
   m_configObjects: {}

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RaycastExample : MonoBehaviour {
+public class RaycastExample : MonoBehaviour
+{
     EggParameter eggParameter;
     EggMovement eggMovement;
     public GameObject Indicator;
@@ -11,14 +12,21 @@ public class RaycastExample : MonoBehaviour {
     int touchCount = 0;
     bool isTouchDelay = false;
 
-	// Use this for initialization
-	void Awake () {
-		eggParameter = GameObject.Find("Egg").transform.Find("clean").gameObject.GetComponent<EggParameter>();
+    int randCount = 1;
+
+    EggPhysicalAI EggPhysicalAI;
+
+    // Use this for initialization
+    void Awake()
+    {
+        eggParameter = GameObject.Find("Egg").transform.Find("clean").gameObject.GetComponent<EggParameter>();
         eggMovement = GameObject.Find("Egg").transform.Find("clean").gameObject.GetComponent<EggMovement>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
+        EggPhysicalAI = GameObject.Find("Egg").transform.Find("clean").gameObject.GetComponent<EggPhysicalAI>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         //if (Input.GetMouseButtonDown(0))
         //{
         //    //Debug.Log("left mouse clicked.");
@@ -43,7 +51,7 @@ public class RaycastExample : MonoBehaviour {
         // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
         layerMask = ~layerMask;
 
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
 
             //create a ray cast and set it to the mouses cursor position in game
@@ -53,17 +61,31 @@ public class RaycastExample : MonoBehaviour {
             {
                 eggMovement.touchCount++;
                 eggMovement.touchPosition = hit2.point;
-                if(!isTouchDelay){
-                    eggParameter.AddParameter(0, 3, 0);
+                if (!isTouchDelay)
+                {
+                    randCount = Random.Range(1, 3);
+                    switch (randCount)
+                    {
+                        case 1:
+                            eggParameter.AddParameter(0, 3, 0);
+                            break;
+                        case 2:
+                            //Debug.Log("Jumpting towards you");
+                            EggPhysicalAI.JumpCloser(hit2.point);
+                            break;
+                        default:
+                            break;
+                    }
                     eggMovement.ProcessInput();
                     eggMovement.UpdateParameterText();
                 }
                 //draw invisible ray cast/vector
-                Debug.DrawLine(ray.origin, hit2.point, Color.yellow);
+                //Debug.DrawLine(ray.origin, hit2.point, Color.yellow);
                 //log hit area to the console
-                Debug.Log(hit2.point);
+                //Debug.Log(hit2.point);
                 touchPoint = hit2.point;
                 Instantiate(Indicator, hit2.point, Quaternion.identity);
+
                 // Indicator.SetActive(true);
                 // Indicator.transform.position = hit2.point;
                 // Indicator.GetComponent<Animator>().SetBool("hasTouched",false);
@@ -82,17 +104,17 @@ public class RaycastExample : MonoBehaviour {
         yield return null;
     }
 
-        //RaycastHit hit;
-        //// Does the ray intersect any objects excluding the player layer
-        //if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
-        //{
-        //    Debug.DrawRay(transform.position, hit.point * hit.distance, Color.yellow);
-        //    Debug.Log("Did Hit");
-        //}
-        //else
-        //{
-        //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.white);
-        //    Debug.Log("Did not Hit");
-        //}
+    //RaycastHit hit;
+    //// Does the ray intersect any objects excluding the player layer
+    //if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
+    //{
+    //    Debug.DrawRay(transform.position, hit.point * hit.distance, Color.yellow);
+    //    Debug.Log("Did Hit");
+    //}
+    //else
+    //{
+    //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.white);
+    //    Debug.Log("Did not Hit");
+    //}
     //}
 }

@@ -18,6 +18,6 @@ public class AudioVisualizer02_Value : MonoBehaviour {
 	float ToDB(float num)
 	{
 		if(Mathf.Log10(100 * num) < 0) return 0;
-		return Mathf.Round(100f * 20f * Mathf.Log10(100 * num)) / 100f;
+		return Mathf.Round(100f * 20f * Mathf.Log10(100 * num)) / 50f;
 	}
 }

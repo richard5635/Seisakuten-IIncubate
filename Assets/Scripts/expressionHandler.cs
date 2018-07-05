@@ -9,6 +9,7 @@ public class expressionHandler : MonoBehaviour {
     public GameObject cheerful;
     public GameObject shocked;
     public GameObject annoyed;
+    public GameObject hot;
     private GameObject setExpression;
     private IEnumerator animate;
 

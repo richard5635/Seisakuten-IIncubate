@@ -14,7 +14,7 @@ public class EggMovement : MonoBehaviour
     [Header("Microphone Related")]
     [HideInInspector]public bool isListening = true;
     public float noisyThreshold = 20.0f;
-    public float noticeThreshold = 5.0f;
+    public float noticeThreshold = 15.0f;
 
     private Vector3 initialPosition;
     private Vector3 initialRotation;
@@ -101,13 +101,14 @@ public class EggMovement : MonoBehaviour
 
     IEnumerator StareHandling()
     {
-        int randomInt = UnityEngine.Random.Range(1,2);
+        int randomInt = 0;
         while(true)
         {
+            randomInt = UnityEngine.Random.Range(1,3);
             switch(randomInt)
             {
                 case 1:
-                    eggParameter.AddParameter(0, 0, 2);
+                    eggParameter.AddParameter(0, 0, 3);
                     eggMovement.UpdateParameterText();
                     break;
                 case 2:
@@ -160,7 +161,7 @@ public class EggMovement : MonoBehaviour
 
     IEnumerator GetLoudness()
     {
-        float volume = MicInput.MicLoudness;
+        float volume;
         //Debug.Log("Listening Start " + volume);
         while(isListening)
         {
@@ -171,6 +172,7 @@ public class EggMovement : MonoBehaviour
                 //Debug.Log("Changed Sd Parameter by +1");
                 eggParameter.AddParameter(3,0,0);
                 eggMovement.UpdateParameterText();
+                eggPhysicalAI.SoundReaction(1);
                 
             }
             else if(volume >= noisyThreshold)
@@ -184,7 +186,7 @@ public class EggMovement : MonoBehaviour
                 //Debug.Log("No Sd change.");
             }
             
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.4f);
         }
         yield return null;
     }
@@ -337,6 +339,7 @@ public class EggMovement : MonoBehaviour
         }
         yield return new WaitForSeconds(1);
         eggShattered = Instantiate(EggShattered, transform.position, transform.rotation, transform.parent);
+        eggParameter.TotalParPass = eggParameter.TotalParameter;
         eggParameter.Initialize();
         for(int i = 0; i < eggShattered.transform.childCount; i++)
         {
@@ -347,10 +350,8 @@ public class EggMovement : MonoBehaviour
                 eggParameter.ParameterColor(eggParameter.TotalParameter)[1], 
                 eggParameter.ParameterColor(eggParameter.TotalParameter)[2],1); 
         }
-        
 
         HideCleanEgg();
-        
         
         if(good)
         {
@@ -365,6 +366,8 @@ public class EggMovement : MonoBehaviour
         gameController.ReproduceEgg();
         yield return null;
     }
+
+
 
 
     public void BadEnding()

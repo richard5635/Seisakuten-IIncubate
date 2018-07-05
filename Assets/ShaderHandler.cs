@@ -8,6 +8,9 @@ public class ShaderHandler : MonoBehaviour {
 	public Material EggMaterial;
 	public Material EggShatMaterial;
 
+	//IEnumerator
+	IEnumerator ChangeColorVar;
+
 	// Use this for initialization
 	void Awake () {
 		EggMaterial = GetComponent<MeshRenderer>().material;
@@ -36,7 +39,7 @@ public class ShaderHandler : MonoBehaviour {
 	{
 		StartCoroutine(GradualChangeColor(r, g, b, a));
 	}
-	IEnumerator GradualChangeColor(float r, float g, float b, float a)
+	public IEnumerator GradualChangeColor(float r, float g, float b, float a)
 	{
 		float time = 0.5f;
 		float elapsedTime = 0f;
@@ -46,7 +49,7 @@ public class ShaderHandler : MonoBehaviour {
 			//Debug.Log("Changing color.. " + elapsedTime);
 			EggMaterial.color = Color.Lerp(EggMaterial.color, new Color(r,g,b,a), elapsedTime/time);
 			elapsedTime += Time.deltaTime;
-			yield return null;
+			yield return new WaitForEndOfFrame();
 		}
 	}
 
@@ -61,11 +64,5 @@ public class ShaderHandler : MonoBehaviour {
 			g,
 			b,
 			a));
-		// mat.color = new Color(
-		// 	mat.color.r + r,
-		// 	mat.color.g + g,
-		// 	mat.color.b + b,
-		// 	mat.color.a + a
-		// );
 	}
 }

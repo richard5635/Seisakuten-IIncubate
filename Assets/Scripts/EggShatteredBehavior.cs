@@ -9,10 +9,10 @@ public class EggShatteredBehavior : MonoBehaviour {
 
 	void Awake()
 	{
-		Application.targetFrameRate = 60;
 	}
 	void Start () {
 		StartCoroutine(Hatch());
+		Destroy(gameObject, 210);
 	}
 	IEnumerator Hatch()
 	{
@@ -29,7 +29,7 @@ public class EggShatteredBehavior : MonoBehaviour {
 			{
 				if(transform.GetChild(i).GetComponent<Rigidbody>() == null)continue;
 				//transform.GetChild(i).GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0, 0.05f, 0));
-				transform.GetChild(i).GetComponent<Rigidbody>().AddExplosionForce(12.0f,explosionCenter,3.0f, 1.0f);
+				transform.GetChild(i).GetComponent<Rigidbody>().AddExplosionForce(12.0f,explosionCenter,4.0f, 1.0f);
 				elapsedTime += Time.deltaTime;
 			}
 			yield return null;

@@ -8,10 +8,12 @@ public class EggParameter : MonoBehaviour
     GameController gameController;
 	EggMovement eggMovement;
     ShaderHandler shaderHandler;
+    EggPhysicalAI eggPhysicalAI;
 	public int SoundParameter;
     public int KnockParameter;
     public int StareParameter;
     public int TotalParameter;
+    public int TotalParPass;
 
     public int hatchgoodlimit = 25;
     public int hatchbadlimit = 75;
@@ -21,9 +23,13 @@ public class EggParameter : MonoBehaviour
     public int PhaseC = 180;
 	public int PhaseD = 200;
 
+    //IEnumerator
+    [HideInInspector]public IEnumerator ChangeColorVar;
+
 	void Awake()
 	{
 		gameController = GameObject.Find("IIncubate").GetComponent<GameController>();
+        eggPhysicalAI = GetComponent<EggPhysicalAI>();
 		eggMovement = GetComponent<EggMovement>();
         shaderHandler = GetComponent<ShaderHandler>();
 	}
@@ -83,14 +89,30 @@ public class EggParameter : MonoBehaviour
         }
 
         //Change MaterialParameter
+        //ChangeColorVar = shaderHandler.GradualChangeColor(SoundParameter * 0.01f, KnockParameter * 0.01f, StareParameter * 0.01f, 1);
         //shaderHandler.changeColor(SoundParameter * 0.01f, KnockParameter * 0.01f, StareParameter * 0.01f, 1);
-        shaderHandler.changeColor(
-            ParameterColor(TotalParameter)[0],
-            ParameterColor(TotalParameter)[1],
-            ParameterColor(TotalParameter)[2],
-             1);
+        
+        // ChangeColorVar = shaderHandler.GradualChangeColor(
+        //     ParameterColor(TotalParameter)[0],
+        //     ParameterColor(TotalParameter)[1],
+        //     ParameterColor(TotalParameter)[2],
+        //      1);
+        // StartCoroutine(ChangeColorVar);
 
-        //Case 2 : Create different reactions based on which parameter is higher. For now just do Case 1.
+        ChangeColorVar = shaderHandler.GradualChangeColor(
+            ParSpecColor(SoundParameter),
+            ParSpecColor(KnockParameter),
+            ParSpecColor(StareParameter),
+             1);
+        StartCoroutine(ChangeColorVar);
+
+        
+    }
+
+    public float ParSpecColor(int par)
+    {
+        float colorPar = 0.55f + eggPhysicalAI.map(Mathf.Clamp(par, 0, 150), 0, 150, 0, 0.3f) ;
+        return colorPar;
     }
 
     public float[] ParameterColor(int TotalParameter)

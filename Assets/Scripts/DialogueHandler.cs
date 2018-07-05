@@ -20,11 +20,11 @@ public class DialogueHandler : MonoBehaviour {
 
 	Dictionary<string, string> Dialogue = new Dictionary<string, string>()
 	{
-		{"intro","Welcome to I Incubate"},
-		{"FirstKnock","おや?\nたまごさんが反応したようです。"},
-		{"Hatch","たまごがふ化しようとしている。"},
-		{"HatchlingDis","「ヒナ」がどこかへ行ってしまったようです。"},
-		{"",""}
+		{"intro","I Incubate　へ　ようこそ。"},
+		{"FirstKnock","どうやら反応があったようです。"},
+		{"Hatch","たまごがふ化します。"},
+		{"HatchlingDis","「ヒナ」が旅立ったようです。"},
+		{"HatchlingBorn",""}
 	};
 
 	// void 

@@ -41,7 +41,7 @@ public class FloatAround : MonoBehaviour
         // rg.AddForce(cross.normalized * 1);
         for (int i = 0; i < transform.childCount; i++)
         {
-            if (transform.childCount > 1) Debug.Log("Adding force to shards.");
+            // if (transform.childCount > 1) //Debug.Log("Adding force to shards.");
             egg = transform.GetChild(i);
             for (int j = 0; j < egg.childCount; j++)
             {
@@ -54,14 +54,16 @@ public class FloatAround : MonoBehaviour
                     0,
                     target.transform.position.z - shard.transform.position.z
                 );
-                side = Vector3.Cross(dir, forward);
-                if(rg != null)
 
-                {
-                    rg.AddForce(dir.normalized * 0.1f);
-                    rg.AddForce(side.normalized * 0.1f);
-					// shard.RotateAround(target.transform.position, Vector3.up, 20f * Time.deltaTime);
-                }
+                
+                side = Vector3.Cross(dir, forward);
+                // if(rg != null)
+
+                // {
+                //     rg.AddForce(dir.normalized * 0.1f);
+                //     rg.AddForce(side.normalized * 0.1f);
+				// 	// shard.RotateAround(target.transform.position, Vector3.up, 20f * Time.deltaTime);
+                // }
 
             }
         }

@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class EggPhysicalAI : MonoBehaviour
 {
+    //Components
+    Material mat;
+    AudioSource audioSource;
     EggMovement eggMovement;
     EggParameter eggParameter;
     expressionHandler exHandler;
     FaceExpressionHandler faceHandler;
-    int parSum;
+    ShaderHandler shaderHandler;
+
     Vector3 pos;
     Vector3 initPos;
     Vector3 initRot;
@@ -21,6 +25,19 @@ public class EggPhysicalAI : MonoBehaviour
     bool isBalancing = true;
     [HideInInspector] public bool isBusy = false;
 
+    //IEnumerator
+    IEnumerator HeatUpVar;
+    IEnumerator CoolDownVar;
+    IEnumerator JumpVar;
+    IEnumerator RollVar;
+    IEnumerator ShakeVar;
+    IEnumerator LookAroundVar;
+
+    //Heat Parameter
+    bool isHeatingUp = true;
+    float heatRed = 0;
+
+
     IEnumerator StandUp()
     {
         yield return null;
@@ -29,6 +46,19 @@ public class EggPhysicalAI : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
+        //IEnumerator
+        HeatUpVar = IHeatUp();
+        CoolDownVar = ICoolDown();
+        JumpVar = Jump();
+        RollVar = Roll();
+        ShakeVar = Shake();
+        LookAroundVar = LookAround();
+
+
+        shaderHandler = GetComponent<ShaderHandler>();
+
+        mat = GetComponent<MeshRenderer>().material;
+        audioSource = GetComponent<AudioSource>();
         eggMovement = GetComponent<EggMovement>();
         eggParameter = GetComponent<EggParameter>();
         exHandler = GameObject.Find("IIncubate").transform.Find("EggExpression").gameObject.GetComponent<expressionHandler>();
@@ -54,6 +84,44 @@ public class EggPhysicalAI : MonoBehaviour
     void Update()
     {
         if (isBalancing) SelfBalancing();
+
+        //Touch
+        if (Input.touchCount > 0)
+        {
+            if (Input.GetTouch(0).phase == TouchPhase.Began)
+            {
+                StopAllMovements();
+                StopCoroutine(eggParameter.ChangeColorVar);
+                Debug.Log("Start Heat Up");
+                isBusy = true;
+                cBeforeHeat = mat.color;
+                heatRed = mat.color.r;
+                StartCoroutine(HeatUpVar);
+                //exHandler.Expression(exHandler.hot, 1.0f);
+            }
+            else if (Input.GetTouch(0).phase == TouchPhase.Ended)
+            {
+                StopCoroutine(HeatUpVar);
+                StartCoroutine(CoolDownVar);
+            }
+        }
+
+        if (Input.GetKeyDown("k"))
+        {
+            StopAllMovements();
+            StopCoroutine(eggParameter.ChangeColorVar);
+            Debug.Log("Start Heat Up");
+            isBusy = true;
+            cBeforeHeat = mat.color;
+            heatRed = mat.color.r;
+            StartCoroutine(HeatUpVar);
+            exHandler.Expression(exHandler.hot, 1.0f);
+        }
+        if (Input.GetKeyUp("k"))
+        {
+            StopCoroutine(HeatUpVar);
+            StartCoroutine(CoolDownVar);
+        }
     }
 
     void SelfBalancing()
@@ -83,29 +151,40 @@ public class EggPhysicalAI : MonoBehaviour
         else return s;
     }
 
-    float map(float s, float a1, float a2, float b1, float b2)
+    public float map(float s, float a1, float a2, float b1, float b2)
     {
         // if (s > a2) return b2;
         // else if (s < a1) return b1;
         return b1 + (s - a1) / (a2 - a1) * (b2 - b1);
     }
 
+    void StopAllMovements()
+    {
+        Debug.Log("Stopping All Movements!");
+        isBalancing = true;
+        StopCoroutine(ShakeVar);
+        StopCoroutine(RollVar);
+        StopCoroutine(JumpVar);
+        StopCoroutine(LookAroundVar);
+    }
+
 
     void DecideBehavior()
     {
-        if (isBusy) {
+        if (isBusy)
+        {
             StartCoroutine(Idle());
             return;
         }
         switch (Random.Range(0, 3))
         {
             case 0:
-                StartCoroutine(Shake());
+                StartCoroutine(ShakeVar);
                 break;
             case 1:
                 if (eggParameter.TotalParameter >= eggParameter.PhaseA)
                 {
-                    StartCoroutine(Roll());
+                    StartCoroutine(RollVar);
                 }
                 else
                 {
@@ -115,7 +194,7 @@ public class EggPhysicalAI : MonoBehaviour
             case 2:
                 if (eggParameter.TotalParameter >= eggParameter.PhaseB)
                 {
-                    StartCoroutine(Jump());
+                    StartCoroutine(JumpVar);
                 }
                 else
                 {
@@ -123,9 +202,9 @@ public class EggPhysicalAI : MonoBehaviour
                 }
                 break;
             case 3:
-                if(eggParameter.TotalParameter >= eggParameter.PhaseC)
+                if (eggParameter.TotalParameter >= eggParameter.PhaseC)
                 {
-                    StartCoroutine(LookAround());
+                    StartCoroutine(LookAroundVar);
                 }
                 else
                 {
@@ -136,18 +215,6 @@ public class EggPhysicalAI : MonoBehaviour
                 StartCoroutine(Idle());
                 break;
         }
-        // if (eggParameter.TotalParameter >= eggParameter.PhaseA && eggParameter.TotalParameter < eggParameter.PhaseB)
-        // {
-
-        // }
-        // if (eggParameter.TotalParameter >= eggParameter.PhaseB && eggParameter.TotalParameter < eggParameter.PhaseC)
-        // {
-
-        // }
-        // if (eggParameter.TotalParameter >= eggParameter.PhaseC)
-        // {
-
-        // }
     }
 
     IEnumerator Idle()
@@ -191,20 +258,19 @@ public class EggPhysicalAI : MonoBehaviour
         rg.AddTorque(new Vector3(-randTorque.x, -randTorque.y, -randTorque.z));
         yield return new WaitForSeconds(Random.Range(1.5f, 3.0f));
         Debug.Log("Shake Finishes.");
-        //StopCoroutine(Shake());
         yield return new WaitForSeconds(1.0f);
         DecideBehavior();
     }
 
     IEnumerator Roll()
     {
-        // if( eggParameter.TotalParameter < eggParameter.PhaseB) exHandler.Expression(exHandler.question, 1.5f) ;
-        // else if (eggParameter.TotalParameter >= eggParameter.PhaseB && eggParameter.TotalParameter < eggParameter.PhaseC) exHandler.Expression(exHandler.cheerful, 1.5f);
-        // else exHandler.Expression(exHandler.annoyed, 1.5f) ;
+        if( eggParameter.TotalParameter < eggParameter.PhaseB) exHandler.Expression(exHandler.question, 1.5f) ;
+        else if (eggParameter.TotalParameter >= eggParameter.PhaseB && eggParameter.TotalParameter < eggParameter.PhaseC) exHandler.Expression(exHandler.cheerful, 1.5f);
+        else exHandler.Expression(exHandler.annoyed, 1.5f) ;
 
         float torque = 10f;
-        
-        if(eggParameter.TotalParameter >= eggParameter.PhaseB) torque = 20f;
+
+        if (eggParameter.TotalParameter >= eggParameter.PhaseB) torque = 20f;
 
         isBalancing = false;
         Debug.Log("Roll Start");
@@ -223,8 +289,8 @@ public class EggPhysicalAI : MonoBehaviour
 
     IEnumerator Jump()
     {
-        // if(eggParameter.TotalParameter < eggParameter.PhaseD) exHandler.Expression(exHandler.sweat, 1.5f);
-        // else exHandler.Expression(exHandler.annoyed, 1.5f) ;
+        if(eggParameter.TotalParameter < eggParameter.PhaseD) exHandler.Expression(exHandler.sweat, 1.5f);
+        else exHandler.Expression(exHandler.annoyed, 1.5f) ;
 
         float forceJ = 40f;
         Debug.Log("Jump Start");
@@ -335,22 +401,29 @@ public class EggPhysicalAI : MonoBehaviour
             case 0:
                 if (eggParameter.TotalParameter >= eggParameter.PhaseA)
                 {
-                    if (!isBusy) {
+                    if (!isBusy)
+                    {
                         StartCoroutine(ScaredAway());
                         exHandler.Expression(exHandler.shocked, 0.6f);
                     }
                 }
                 break;
+            case 1:
+                if(!isBusy)
+                {
+                    eggMovement.ApplyForce(rg, new Vector3(0,24,24), 0.3f);
+                    exHandler.Expression(exHandler.notice, 0.6f);
+                }
+                break;
             default:
                 break;
         }
-
     }
 
     IEnumerator ScaredAway()
     {
         //Give animation
-        exHandler.Expression(exHandler.notice, 0.8f);
+        //exHandler.Expression(exHandler.notice, 0.8f);
         Debug.Log("Scared!!");
         isBusy = true;
         isBalancing = false;
@@ -370,9 +443,61 @@ public class EggPhysicalAI : MonoBehaviour
         StartCoroutine(Delay(1));
     }
 
+    int heatLevel = 0;
+    Color cBeforeHeat;
+
+    public IEnumerator IHeatUp()
+    {
+        while (true)
+        {
+            Debug.Log("Red = " + heatRed);
+            heatRed += 0.15f;
+            shaderHandler.changeColor(heatRed, mat.color.g, mat.color.b, mat.color.a);
+            eggParameter.AddParameter(0, 1, 0);
+            if(heatRed > 1 && heatRed < 1.5f)exHandler.Expression(exHandler.hot, 1.0f);
+            yield return new WaitForSeconds(0.45f);
+
+            // int timer = 0;
+            // if(timer % 3 == 2)
+            // {
+
+            // }
+            // timer ++;
+        }
+    }
+
+    public IEnumerator ICoolDown()
+    {
+        Debug.Log("Stop Heat Up");
+        shaderHandler.changeColor(cBeforeHeat.r, cBeforeHeat.g, cBeforeHeat.b, cBeforeHeat.a);
+        isBalancing = false;
+        yield return new WaitForSeconds(2.0f);
+        isBalancing = true;
+        isBusy = false;
+        StartCoroutine(eggParameter.ChangeColorVar);
+        DecideBehavior();
+    }
+
     IEnumerator RollTo(float x, float z)
     {
-        
         yield return null;
+    }
+
+    public void JumpCloser(Vector3 target)
+    {
+        StartCoroutine(IJumpCloser(target));
+    }
+    IEnumerator IJumpCloser(Vector3 target)
+    {
+        float forceJ = 40f;
+        float elapsedTime = 0;
+        float time = 0.5f;
+        while (elapsedTime < time)
+        {
+            rg.AddForce((target - tf.position)*forceJ);
+            elapsedTime += Time.deltaTime;
+        }
+        yield return new WaitForSeconds(1);
+        StartCoroutine(Delay(1));
     }
 }

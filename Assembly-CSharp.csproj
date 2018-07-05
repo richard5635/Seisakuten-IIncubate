@@ -55,6 +55,7 @@
   <ItemGroup>
      <Compile Include="Assets\CursorBehaviour.cs" />
      <Compile Include="Assets\followEggXZ.cs" />
+     <Compile Include="Assets\HatchlingChickHandler.cs" />
      <Compile Include="Assets\Orbit01.cs" />
      <Compile Include="Assets\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
      <Compile Include="Assets\PostProcessing\Runtime\Attributes\MinAttribute.cs" />
@@ -129,6 +130,7 @@
      <Compile Include="Assets\SelfDestroy.cs" />
      <Compile Include="Assets\ShaderHandler.cs" />
      <Compile Include="Assets\ShardHandler.cs" />
+     <Compile Include="Assets\TouchManager.cs" />
      <None Include="Assets\PostProcessing\Resources\Shaders\DepthOfField.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
