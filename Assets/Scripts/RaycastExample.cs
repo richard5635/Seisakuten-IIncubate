@@ -27,22 +27,6 @@ public class RaycastExample : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    //Debug.Log("left mouse clicked.");
-        //    //Debug.Log(Input.mousePosition);
-        //    RaycastHit hit;
-        //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //    if (Physics.Raycast(ray, out hit))
-        //    {
-        //        if (hit.rigidbody != null)
-        //        {
-        //            Debug.Log(hit);
-        //            Indicator.SetActive(true);
-        //            Indicator.transform.position = hit.point;
-        //        }
-        //    }
-        //}
 
         // Bit shift the index of the layer (8) to get a bit mask
         int layerMask = 1 << 8;
@@ -53,7 +37,6 @@ public class RaycastExample : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-
             //create a ray cast and set it to the mouses cursor position in game
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit2;
@@ -63,33 +46,11 @@ public class RaycastExample : MonoBehaviour
                 eggMovement.touchPosition = hit2.point;
                 if (!isTouchDelay)
                 {
-                    randCount = Random.Range(1, 3);
-                    switch (randCount)
-                    {
-                        case 1:
-                            eggParameter.AddParameter(0, 3, 0);
-                            break;
-                        case 2:
-                            //Debug.Log("Jumpting towards you");
-                            EggPhysicalAI.JumpCloser(hit2.point);
-                            break;
-                        default:
-                            break;
-                    }
                     eggMovement.ProcessInput();
                     eggMovement.UpdateParameterText();
                 }
-                //draw invisible ray cast/vector
-                //Debug.DrawLine(ray.origin, hit2.point, Color.yellow);
-                //log hit area to the console
-                //Debug.Log(hit2.point);
                 touchPoint = hit2.point;
                 Instantiate(Indicator, hit2.point, Quaternion.identity);
-
-                // Indicator.SetActive(true);
-                // Indicator.transform.position = hit2.point;
-                // Indicator.GetComponent<Animator>().SetBool("hasTouched",false);
-                // Indicator.GetComponent<Animator>().SetBool("hasTouched",true);
                 StartCoroutine(Delay(1));
             }
         }

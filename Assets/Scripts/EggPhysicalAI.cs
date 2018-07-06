@@ -24,6 +24,7 @@ public class EggPhysicalAI : MonoBehaviour
     private float minAngle = 2.0f;
     bool isBalancing = true;
     [HideInInspector] public bool isBusy = false;
+    GameObject steam;
 
     //IEnumerator
     IEnumerator HeatUpVar;
@@ -97,7 +98,7 @@ public class EggPhysicalAI : MonoBehaviour
                 cBeforeHeat = mat.color;
                 heatRed = mat.color.r;
                 StartCoroutine(HeatUpVar);
-                //exHandler.Expression(exHandler.hot, 1.0f);
+                exHandler.Expression(exHandler.hot, 1.0f);
             }
             else if (Input.GetTouch(0).phase == TouchPhase.Ended)
             {
@@ -120,7 +121,7 @@ public class EggPhysicalAI : MonoBehaviour
         if (Input.GetKeyUp("k"))
         {
             StopCoroutine(HeatUpVar);
-            StartCoroutine(CoolDownVar);
+            StartCoroutine(ICoolDown());
         }
     }
 
@@ -448,21 +449,23 @@ public class EggPhysicalAI : MonoBehaviour
 
     public IEnumerator IHeatUp()
     {
-        while (heatLevel < 50)
+        heatLevel = 0;
+        heatRed = Mathf.Clamp(mat.color.r + 0.4f, 0, 1);
+        StopCoroutine(eggParameter.ChangeColorVar);
+        while (heatLevel < 10)
         {
-            Debug.Log("Red = " + heatRed);
-            heatRed += 0.15f;
+            // Debug.Log("Red = " + heatRed);
             heatLevel++;
             shaderHandler.changeColor(heatRed, mat.color.g, mat.color.b, mat.color.a);
+            // mat.color = Color.Lerp(mat.color, new Color(heatRed, mat.color.g, mat.color.b, 1), heatLevel/20);
             eggParameter.AddParameter(0, 1, 0);
             if(heatRed > 1 && heatRed < 1.5f)exHandler.Expression(exHandler.hot, 1.0f);
-            yield return new WaitForSeconds(0.45f);
-
+            yield return new WaitForSeconds(0.3f);
         }
         float elapsedTime = 0;
         while (elapsedTime < 1)
         {
-            rg.AddForce(new Vector3( 0, 10, 0));
+            rg.AddRelativeForce(new Vector3( 0, 30, 0));
             elapsedTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
@@ -471,7 +474,7 @@ public class EggPhysicalAI : MonoBehaviour
 
     public IEnumerator ICoolDown()
     {
-        Debug.Log("Stop Heat Up");
+        Debug.Log("Start Cooling Down");
         shaderHandler.changeColor(cBeforeHeat.r, cBeforeHeat.g, cBeforeHeat.b, cBeforeHeat.a);
         isBalancing = false;
         yield return new WaitForSeconds(2.0f);

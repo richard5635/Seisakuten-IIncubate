@@ -12,7 +12,7 @@ public class EggMovement : MonoBehaviour
 
     //Microphone Related
     [Header("Microphone Related")]
-    [HideInInspector]public bool isListening = true;
+    [HideInInspector] public bool isListening = true;
     public float noisyThreshold = 19.0f;
     public float noticeThreshold = 14.0f;
     public float waveThreshold = 6.0f;
@@ -24,7 +24,7 @@ public class EggMovement : MonoBehaviour
     private float y;
     Rigidbody rg;
     Transform tf;
-    
+
 
     [Header("UI")]
     public Text TextStarePar;
@@ -47,6 +47,7 @@ public class EggMovement : MonoBehaviour
     float rotX;
     float rotY;
     public float RotationGain = 5;
+    int randCount;
 
 
     private string[] keywords = { "よしよし", "もしもし", "卵を探せ", "どこ" };
@@ -57,18 +58,35 @@ public class EggMovement : MonoBehaviour
     public void ProcessInput()
     {
         //call a variable based on string name?
-        if (touchCount == 1) 
+        if (touchCount == 1)
         {
-            dialogueHandler.Narrate("FirstKnock",2);
+            dialogueHandler.Narrate("FirstKnock", 2);
             exHandler.Expression(exHandler.notice, 1.0f);
         }
-        if (eggParameter.TotalParameter >= eggParameter.PhaseB)
+        randCount = UnityEngine.Random.Range(1, 3);
+        switch (randCount)
         {
-            if (!eggPhysicalAI.isBusy) {
-                eggPhysicalAI.RotateTowards(touchPosition);
-                exHandler.Expression(exHandler.notice, 1.0f);
-            }
+            case 1:
+                if (eggParameter.TotalParameter >= eggParameter.PhaseA)
+                {
+                    if (!eggPhysicalAI.isBusy)
+                    {
+                        eggParameter.AddParameter(0, 2, 0);
+                        eggPhysicalAI.RotateTowards(touchPosition);
+                        exHandler.Expression(exHandler.notice, 1.0f);
+                    }
+                }
+                break;
+            case 2:
+                //Debug.Log("Jumpting towards you");
+                eggParameter.AddParameter(0, 2, 0);
+                eggPhysicalAI.JumpCloser(touchPosition);
+                break;
+            default:
+                break;
         }
+
+
     }
 
     void Awake()
@@ -89,7 +107,7 @@ public class EggMovement : MonoBehaviour
         eggMovement = GetComponent<EggMovement>();
     }
 
-    
+
     void Start()
     {
         initialPosition = transform.localPosition;
@@ -104,10 +122,10 @@ public class EggMovement : MonoBehaviour
     IEnumerator StareHandling()
     {
         int randomInt = 0;
-        while(true)
+        while (true)
         {
-            randomInt = UnityEngine.Random.Range(1,3);
-            switch(randomInt)
+            randomInt = UnityEngine.Random.Range(1, 3);
+            switch (randomInt)
             {
                 case 1:
                     eggParameter.AddParameter(0, 0, 3);
@@ -165,42 +183,45 @@ public class EggMovement : MonoBehaviour
     {
         float volume;
         //Debug.Log("Listening Start " + volume);
-        while(isListening)
+        while (isListening)
         {
             volume = ToDB(MicInput.MicLoudness);
+            //Debug.Log(volume);
             //Debug.Log("Listening... " + volume);
-            if (volume >= waveThreshold) {
+            if (volume >= waveThreshold)
+            {
                 Instantiate(soundIndicator, soundIndicator.transform.position, soundIndicator.transform.rotation);
-                Instantiate(soundIndicator02, soundIndicator02.transform.position, soundIndicator02.transform.rotation );
+                Instantiate(soundIndicator02, soundIndicator02.transform.position, soundIndicator02.transform.rotation);
             }
-            if(volume >= noticeThreshold && volume < noisyThreshold)
+            if (volume >= noticeThreshold && volume < noisyThreshold)
             {
                 //Debug.Log("Changed Sd Parameter by +1");
-                eggParameter.AddParameter(2,0,0);
+                eggParameter.AddParameter(2, 0, 0);
                 eggMovement.UpdateParameterText();
                 eggPhysicalAI.SoundReaction(1);
             }
-            else if(volume >= noisyThreshold)
+            else if (volume >= noisyThreshold)
             {
                 //Debug.Log("Changed Sd Parameter by ");
-                eggParameter.AddParameter(4,0,0);
+                eggParameter.AddParameter(4, 0, 0);
                 eggMovement.UpdateParameterText();
                 eggPhysicalAI.SoundReaction(0);
             }
-            else{
+            else
+            {
                 //Debug.Log("No Sd change.");
             }
-            
-            yield return new WaitForSeconds(0.4f);
+
+            yield return new WaitForSeconds(0.2f);
         }
         yield return null;
     }
 
     float ToDB(float num)
-	{
-		if(Mathf.Log10(100 * num) < 0) return 0;
-		return Mathf.Round(100f * 20f * Mathf.Log10(100 * num)) / 100f;
-	}
+    {
+        if (Mathf.Log10(100 * num) < 0) return 0;
+        return Mathf.Round(100f * 20f * Mathf.Log10(100 * num)) / 100f;
+    }
 
     void RestartEgg()
     {
@@ -316,7 +337,7 @@ public class EggMovement : MonoBehaviour
     IEnumerator IApplyForce(Rigidbody rigidb, Vector3 v, float duration)
     {
         float elapsedTime = 0;
-        while(elapsedTime < duration)
+        while (elapsedTime < duration)
         {
             rigidb.AddForce(v.x, v.y, v.z);
             elapsedTime += Time.deltaTime;
@@ -336,35 +357,35 @@ public class EggMovement : MonoBehaviour
         float duration = 2.0f;
         float elapsedTime = 0;
         gameController.SpotLight.GetComponent<Animator>().SetBool("isOn", false);
-        while(elapsedTime < duration)
+        while (elapsedTime < duration)
         {
-            tf.position = Vector3.Lerp(initPos, new Vector3(0, 0, 0.5f), elapsedTime/duration);
+            tf.position = Vector3.Lerp(initPos, new Vector3(0, 0, 0.5f), elapsedTime / duration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
         yield return new WaitForSeconds(1);
         eggShattered = Instantiate(EggShattered, transform.position, transform.rotation, transform.parent);
         eggParameter.TotalParPass = eggParameter.TotalParameter;
-        
-        for(int i = 0; i < eggShattered.transform.childCount; i++)
+
+        for (int i = 0; i < eggShattered.transform.childCount; i++)
         {
-            if(eggShattered.transform.GetChild(i).GetComponent<MeshRenderer>() == null)continue;
+            if (eggShattered.transform.GetChild(i).GetComponent<MeshRenderer>() == null) continue;
             Material eggShard = eggShattered.transform.GetChild(i).GetComponent<MeshRenderer>().material;
-            shaderHandler.changeShatteredEggColor(eggShard, 
-                eggParameter.ParSpecColor(eggParameter.SoundParameter), 
-                eggParameter.ParSpecColor(eggParameter.KnockParameter), 
-                eggParameter.ParSpecColor(eggParameter.StareParameter),1); 
+            shaderHandler.changeShatteredEggColor(eggShard,
+                eggParameter.ParSpecColor(eggParameter.SoundParameter),
+                eggParameter.ParSpecColor(eggParameter.KnockParameter),
+                eggParameter.ParSpecColor(eggParameter.StareParameter), 1);
         }
         eggParameter.inhColor = new Color(
-            eggParameter.ParSpecColor(eggParameter.SoundParameter), 
-                eggParameter.ParSpecColor(eggParameter.KnockParameter), 
-                eggParameter.ParSpecColor(eggParameter.StareParameter),1
+            eggParameter.ParSpecColor(eggParameter.SoundParameter),
+                eggParameter.ParSpecColor(eggParameter.KnockParameter),
+                eggParameter.ParSpecColor(eggParameter.StareParameter), 1
         );
         eggParameter.Initialize();
 
         HideCleanEgg();
-        
-        if(good)
+
+        if (good)
         {
 
         }

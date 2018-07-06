@@ -6,6 +6,7 @@ public class FaceExpressionHandler : MonoBehaviour {
 
 	public GameObject blush;
     public GameObject angry;
+    public GameObject steam;
     private GameObject setExpression;
     private IEnumerator animate;
 
