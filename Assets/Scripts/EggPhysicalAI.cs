@@ -48,7 +48,7 @@ public class EggPhysicalAI : MonoBehaviour
     void Awake()
     {
         //IEnumerator
-        HeatUpVar = IHeatUp();
+        
         CoolDownVar = ICoolDown();
         JumpVar = Jump();
         RollVar = Roll();
@@ -91,38 +91,41 @@ public class EggPhysicalAI : MonoBehaviour
         {
             if (Input.GetTouch(0).phase == TouchPhase.Began)
             {
-                StopAllMovements();
-                StopCoroutine(eggParameter.ChangeColorVar);
-                Debug.Log("Start Heat Up");
-                isBusy = true;
-                cBeforeHeat = mat.color;
-                heatRed = mat.color.r;
-                StartCoroutine(HeatUpVar);
-                exHandler.Expression(exHandler.hot, 1.0f);
+                HeatUpMethod();
             }
             else if (Input.GetTouch(0).phase == TouchPhase.Ended)
             {
-                StopCoroutine(HeatUpVar);
-                StartCoroutine(CoolDownVar);
+                CoolDownMethod();
             }
         }
 
         if (Input.GetKeyDown("k"))
         {
-            StopAllMovements();
-            StopCoroutine(eggParameter.ChangeColorVar);
-            Debug.Log("Start Heat Up");
-            isBusy = true;
-            cBeforeHeat = mat.color;
-            heatRed = mat.color.r;
-            StartCoroutine(HeatUpVar);
-            exHandler.Expression(exHandler.hot, 1.0f);
+            HeatUpMethod();
         }
         if (Input.GetKeyUp("k"))
         {
-            StopCoroutine(HeatUpVar);
-            StartCoroutine(ICoolDown());
+            CoolDownMethod();
         }
+    }
+
+    void HeatUpMethod()
+    {
+        StopAllMovements();
+        StopCoroutine(eggParameter.ChangeColorVar);
+        Debug.Log("Start Heat Up");
+        isBusy = true;
+        cBeforeHeat = mat.color;
+        heatRed = mat.color.r;
+        HeatUpVar = IHeatUp();
+        StartCoroutine(HeatUpVar);
+        exHandler.Expression(exHandler.hot, 1.0f);
+    }
+
+    void CoolDownMethod()
+    {
+        StopCoroutine(HeatUpVar);
+        StartCoroutine(ICoolDown());
     }
 
     void SelfBalancing()
@@ -265,9 +268,9 @@ public class EggPhysicalAI : MonoBehaviour
 
     IEnumerator Roll()
     {
-        if( eggParameter.TotalParameter < eggParameter.PhaseB) exHandler.Expression(exHandler.question, 1.5f) ;
+        if (eggParameter.TotalParameter < eggParameter.PhaseB) exHandler.Expression(exHandler.question, 1.5f);
         else if (eggParameter.TotalParameter >= eggParameter.PhaseB && eggParameter.TotalParameter < eggParameter.PhaseC) exHandler.Expression(exHandler.cheerful, 1.5f);
-        else exHandler.Expression(exHandler.annoyed, 1.5f) ;
+        else exHandler.Expression(exHandler.annoyed, 1.5f);
 
         float torque = 10f;
 
@@ -290,8 +293,8 @@ public class EggPhysicalAI : MonoBehaviour
 
     IEnumerator Jump()
     {
-        if(eggParameter.TotalParameter < eggParameter.PhaseD) exHandler.Expression(exHandler.sweat, 1.5f);
-        else exHandler.Expression(exHandler.annoyed, 1.5f) ;
+        if (eggParameter.TotalParameter < eggParameter.PhaseD) exHandler.Expression(exHandler.sweat, 1.5f);
+        else exHandler.Expression(exHandler.annoyed, 1.5f);
 
         float forceJ = 40f;
         Debug.Log("Jump Start");
@@ -410,9 +413,9 @@ public class EggPhysicalAI : MonoBehaviour
                 }
                 break;
             case 1:
-                if(!isBusy)
+                if (!isBusy)
                 {
-                    eggMovement.ApplyForce(rg, new Vector3(0,24,24), 0.3f);
+                    eggMovement.ApplyForce(rg, new Vector3(0, 24, 24), 0.3f);
                     exHandler.Expression(exHandler.notice, 0.6f);
                 }
                 break;
@@ -450,26 +453,29 @@ public class EggPhysicalAI : MonoBehaviour
     public IEnumerator IHeatUp()
     {
         heatLevel = 0;
-        heatRed = Mathf.Clamp(mat.color.r + 0.4f, 0, 1);
-        StopCoroutine(eggParameter.ChangeColorVar);
-        while (heatLevel < 10)
-        {
-            // Debug.Log("Red = " + heatRed);
-            heatLevel++;
-            shaderHandler.changeColor(heatRed, mat.color.g, mat.color.b, mat.color.a);
-            // mat.color = Color.Lerp(mat.color, new Color(heatRed, mat.color.g, mat.color.b, 1), heatLevel/20);
-            eggParameter.AddParameter(0, 1, 0);
-            if(heatRed > 1 && heatRed < 1.5f)exHandler.Expression(exHandler.hot, 1.0f);
-            yield return new WaitForSeconds(0.3f);
-        }
+        heatRed = Mathf.Clamp(mat.color.r + 1.0f, 0, 2);
         float elapsedTime = 0;
-        while (elapsedTime < 1)
+        StopCoroutine(eggParameter.ChangeColorVar);
+
+        while(elapsedTime < 5)
         {
-            rg.AddRelativeForce(new Vector3( 0, 30, 0));
+            mat.color = Color.Lerp(mat.color, new Color(heatRed, mat.color.g, mat.color.b, 1), elapsedTime / 5);
             elapsedTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
-        
+
+        eggParameter.AddParameter(0, 5, 0);
+        elapsedTime = 0;
+        exHandler.Expression(exHandler.hot, 1.0f);
+
+        yield return new WaitForSeconds(1);
+        while (elapsedTime < 1)
+        {
+            rg.AddRelativeForce(new Vector3(0, 30, 0));
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+
     }
 
     public IEnumerator ICoolDown()
@@ -500,7 +506,7 @@ public class EggPhysicalAI : MonoBehaviour
         float time = 0.5f;
         while (elapsedTime < time)
         {
-            rg.AddForce((target - tf.position)*forceJ);
+            rg.AddForce((target - tf.position) * forceJ);
             elapsedTime += Time.deltaTime;
         }
         yield return new WaitForSeconds(1);
