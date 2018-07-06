@@ -15,7 +15,9 @@ public class EggMovement : MonoBehaviour
     [HideInInspector]public bool isListening = true;
     public float noisyThreshold = 19.0f;
     public float noticeThreshold = 14.0f;
-
+    public float waveThreshold = 6.0f;
+    public GameObject soundIndicator;
+    public GameObject soundIndicator02;
     private Vector3 initialPosition;
     private Vector3 initialRotation;
     private float x;
@@ -167,18 +169,21 @@ public class EggMovement : MonoBehaviour
         {
             volume = ToDB(MicInput.MicLoudness);
             //Debug.Log("Listening... " + volume);
+            if (volume >= waveThreshold) {
+                Instantiate(soundIndicator, soundIndicator.transform.position, soundIndicator.transform.rotation);
+                Instantiate(soundIndicator02, soundIndicator02.transform.position, soundIndicator02.transform.rotation );
+            }
             if(volume >= noticeThreshold && volume < noisyThreshold)
             {
                 //Debug.Log("Changed Sd Parameter by +1");
-                eggParameter.AddParameter(3,0,0);
+                eggParameter.AddParameter(2,0,0);
                 eggMovement.UpdateParameterText();
                 eggPhysicalAI.SoundReaction(1);
-                
             }
             else if(volume >= noisyThreshold)
             {
-                //Debug.Log("Changed Sd Parameter by -1");
-                eggParameter.AddParameter(-3,0,0);
+                //Debug.Log("Changed Sd Parameter by ");
+                eggParameter.AddParameter(4,0,0);
                 eggMovement.UpdateParameterText();
                 eggPhysicalAI.SoundReaction(0);
             }

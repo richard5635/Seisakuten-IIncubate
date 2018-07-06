@@ -460,10 +460,10 @@ public class EggPhysicalAI : MonoBehaviour
 
         }
         float elapsedTime = 0;
-        while (elapsedTime < 2)
+        while (elapsedTime < 1)
         {
             rg.AddForce(new Vector3( 0, 10, 0));
-            elapsedTime += Time.deltaTime:
+            elapsedTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
         
